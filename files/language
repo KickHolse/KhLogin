@@ -1,0 +1,14 @@
+# Skript feito por Kiberzn
+# Discord: a-zn#4375
+
+messages:
+  login:
+    success: '\n &aVocê foi logado com sucesso, se divirta com nossos minigames.\n '
+    wrong: '&cA senha que você inseriu esta incorreta, você tem mais {tries} tentativas!'
+    usage: '&cUtilize /login <senha>'
+    title:
+      title: '&a&lREDE ZN'
+      subtitle: '&7Utilize /login <senha>'
+    kicks:
+      time-out: '&c&lREDEZN\n\n&cVocê demorou muito para\n&cse autenticar!'
+      max-tries: '&c&lREDEZN\n\n&cVocê excedeu seu limite\n&cde tentativas!'
