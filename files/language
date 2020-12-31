@@ -1,6 +1,11 @@
 # Skript feito por Kiberzn
 # Discord: a-zn#4375
 
+options:
+  tries: 3
+  length:
+    maximum: 32
+    minimum: 5
 messages:
   login:
     success: '\n &aVocê foi logado com sucesso, se divirta com nossos minigames.\n '
@@ -12,3 +17,14 @@ messages:
     kicks:
       time-out: '&c&lREDEZN\n\n&cVocê demorou muito para\n&cse autenticar!'
       max-tries: '&c&lREDEZN\n\n&cVocê excedeu seu limite\n&cde tentativas!'
+  register:
+    different: '&cAs senhas que você inseriu não se coincidem!'
+    your-nick: '&cA senha não pode ser seu nick!'
+    success: '\n &aSua conta foi registrada com sucesso, se divirta com nossos minigames.\n '
+    length: '&cA senha deve conter no mínimo {minimum} e no maximo {maximum} caracteres!'
+    usage: '&cUtilize /register <senha> <senha>'
+    title:
+      title: '&a&lREDE ZN'
+      subtitle: '&7Utilize /register <senha> <senha>'
+    kicks:
+      time-out: '&c&lREDEZN\n\n&cVocê demorou muito para\n&cse autenticar!'
