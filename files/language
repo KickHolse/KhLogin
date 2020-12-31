@@ -2,6 +2,7 @@
 # Discord: a-zn#4375
 
 options:
+  time: 30 seconds
   tries: 3
   length:
     maximum: 32
@@ -15,8 +16,8 @@ messages:
       title: '&a&lREDE ZN'
       subtitle: '&7Utilize /login <senha>'
     kicks:
-      time-out: '&c&lREDEZN\n\n&cVocê demorou muito para\n&cse autenticar!'
-      max-tries: '&c&lREDEZN\n\n&cVocê excedeu seu limite\n&cde tentativas!'
+      time-out: '&c&lREDE ZN\n\n&c                    Você excedeu o tempo limite para se autenticar!'
+      max-tries: '&c&lREDE ZN\n\n&cVocê excedeu seu limite\n&cde tentativas!'
   register:
     different: '&cAs senhas que você inseriu não se coincidem!'
     your-nick: '&cA senha não pode ser seu nick!'
@@ -27,4 +28,4 @@ messages:
       title: '&a&lREDE ZN'
       subtitle: '&7Utilize /register <senha> <senha>'
     kicks:
-      time-out: '&c&lREDEZN\n\n&cVocê demorou muito para\n&cse autenticar!'
+      time-out: '&c&lREDE ZN\n\n&c                    Você excedeu o tempo limite para se autenticar!'
