@@ -29,3 +29,10 @@ messages:
       subtitle: '&7Utilize /register <senha> <senha>'
     kicks:
       time-out: '&c&lREDE ZN\n\n&c                    Você excedeu o tempo limite para se autenticar!'
+  changepassword:
+    your-nick: '&cSua nova senha não pode ser seu nick!'
+    success: '\n &aSua senha foi alterada com sucesso!\n '
+    length: '&cA sua nova senha deve conter no mínimo {minimum} e no maximo {maximum} caracteres!'
+    equal: '&cA sua senha nova não pode ser a mesma que a antiga!'
+    wrong: '&cA senha antiga que você inseriu esta incorreta!'
+    usage: '&cUtilize /changepassword <senha-antiga> <senha-nova>'
