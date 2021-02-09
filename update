@@ -12,33 +12,13 @@
 # ─────────────────────────────────────────────────── #
 options:
 #	Nome: KhLogin | Autor: Kiberzn
-	version: 1.3
+	version: 1.2
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── #
 # events
 join:
-	set {_x} to yml value "locations.lobby" from file "plugins/KhLogin/locations.yml"
-	set {_time} to yml value "options.time" of file "plugins/KhLogin/language.yml"
 	khcore_notifyUpdate(player, "KhLogin", "khlogin", "68771", "{@version}", "khlogin atualizar")
-	teleport player to khcore_deserializeLocation({_x})
-	file "plugins/KhLogin/players/%player%.yml" doesn't exist:
-		loop "title" and "subtitle":
-			set {_%loop-value%} to yml value "messages.register.title.%loop-value%" of file "plugins/KhLogin/language.yml"
-		send player title colored {_title} with subtitle colored {_subtitle} for 9999 seconds
-		wait "%{_time}%" parsed as timespan
-		file "plugins/KhLogin/players/%player%.yml" doesn't exist:
-			set {_kick} to yml value "messages.login.kicks.time-out" of file "plugins/KhLogin/language.yml"
-			replace all "\n" in {_kick} with newline
-			kick player due to colored {_kick}
-	else:
-		loop "title" and "subtitle":
-			set {_%loop-value%} to yml value "messages.login.title.%loop-value%" of file "plugins/KhLogin/language.yml"
-		send player title colored {_title} with subtitle colored {_subtitle} for 9999 seconds
-		wait "%{_time}%" parsed as timespan
-		khlogin_checkLogged(player) == false:
-			set {_kick} to yml value "messages.login.kicks.time-out" of file "plugins/KhLogin/language.yml"
-			replace all "\n" in {_kick} with newline
-			kick player due to colored {_kick}
+	khlogin_join(player)
 quit:
 	file "plugins/KhLogin/players/%player%.yml" exists:
 		set {_tries} to yml value "options.tries" of file "plugins/KhLogin/language.yml"
@@ -60,8 +40,8 @@ inventory click:
 	khlogin_cancelEvents(player) == false
 	cancel event
 command:
-	khlogin_cancelEvents(player) == false
 	executor is a player
+	khlogin_cancelEvents(player) == false
 	command is not "login" or "register"
 	cancel event
 
@@ -73,16 +53,10 @@ command /khlogin [<text = help>]:
 	trigger:
 		arg 1 == "help":
 			send "%nl%&e  Ajuda - Login 1/1%nl% "
-			send "&3 /khlogin atualizar &f- &7Atualiza o skript"
-			send "&3 /khlogin setlobby &f- &7Define o lobby"
-			send newline
+			send "&3 /khlogin atualizar &f- &7Atualiza o skript%nl%"
 		arg 1 == "atualizar":
 			khcore_update(player, "%{khlogin::check_update}%", "KhLogin", script)
-		arg 1 == "setlobby":
-			send "&aLobby principal definido com sucesso!"
-			set yml value "locations.lobby" of file "plugins/KhLogin/locations.yml" to khcore_serializeLocation(player's location)
 command /register [<text>] [<text>]:
-	aliases: registrar
 	trigger:
 		file "plugins/KhLogin/players/%player%.yml" doesn't exist:
 			arg 2 is set:
@@ -101,6 +75,7 @@ command /register [<text>] [<text>]:
 								set yml value "%uuid of player%.logged" of file "plugins/KhLogin/players/%player%.yml" to true
 								send colored {_success}
 								send player title "" with subtitle ""
+								khcore_playSound(player, ORB_PICKUP, 1, 15)
 							else:
 								send colored {_your-nick}
 						else:
@@ -115,8 +90,8 @@ command /register [<text>] [<text>]:
 command /login [<text>]:
 	trigger:
 		file "plugins/KhLogin/players/%player%.yml" exists:
-			arg 1 is set:
-				khlogin_checkLogged(player) == false:
+			khlogin_checkLogged(player) == false:
+				arg 1 is set:
 					set {_x} to yml value "%uuid of player%.password" of file "plugins/KhLogin/players/%player%.yml"
 					loop "success" and "wrong":
 						set {_%loop-value%} to yml value "messages.login.%loop-value%" of file "plugins/KhLogin/language.yml"
@@ -125,16 +100,54 @@ command /login [<text>]:
 						set yml value "%uuid of player%.logged" of file "plugins/KhLogin/players/%player%.yml" to true
 						send colored {_success}
 						send player title "" with subtitle ""
+						khcore_playSound(player, ORB_PICKUP, 1, 15)
 					else:
 						set {_x} to yml value "%uuid of player%.tries" of file "plugins/KhLogin/players/%player%.yml"
 						remove 1 from {_x}
 						set yml value "%uuid of player%.tries" of file "plugins/KhLogin/players/%player%.yml" to {_x}
 						{_x} is 0:
-							kick player due to "erro"
+							set {_kick} to yml value "messages.login.kicks.max-tries" of file "plugins/KhLogin/language.yml"
+							replace all "\n" in {_kick} with newline
+							kick player because colored {_kick}
 						replace all "{tries}" in {_wrong} with "%{_x}%"
 						send colored {_wrong}
+						khcore_playSound(player, VILLAGER_NO, 1, 5)
+				else:
+					set {_x} to yml value "messages.login.usage" of file "plugins/KhLogin/language.yml"
+					send colored {_x}
+command /changepassword [<text>] [<text>]:
+	trigger:
+		file "plugins/KhLogin/players/%player%.yml" exists:
+			arg 2 is set:
+				loop "equal" and "wrong" and "your-nick" and "success" and "length":
+					set {_%loop-value%} to yml value "messages.changepassword.%loop-value%" of file "plugins/KhLogin/language.yml"
+					replace all "\n" in {_%loop-value%} with newline
+				loop "minimum" and "maximum":
+					set {_%loop-value%} to yml value "options.length.%loop-value%" of file "plugins/KhLogin/language.yml"
+					replace all "{%loop-value%}" in {_length} with "%{_%loop-value%}%"
+				set {_x} to yml value "%uuid of player%.password" of file "plugins/KhLogin/players/%player%.yml"
+				arg 1 is {_x}:
+					arg 1 != arg 2:
+						length of arg 2 >= {_minimum}:
+							length of arg 2 <= {_maximum}:
+								arg 2 != player's name:
+									set yml value "%uuid of player%.password" of file "plugins/KhLogin/players/%player%.yml" to arg 2
+									set yml value "%uuid of player%.logged" of file "plugins/KhLogin/players/%player%.yml" to false
+									send colored {_success}
+									khcore_playSound(player, ORB_PICKUP, 1, 15)
+									khlogin_join(player)
+								else:
+									send colored {_your-nick}
+							else:
+								send colored {_length}
+						else:
+							send colored {_length}
+					else:
+						send colored {_equal}
+				else:
+					send colored {_wrong}
 			else:
-				set {_x} to yml value "messages.login.usage" of file "plugins/KhLogin/language.yml"
+				set {_x} to yml value "messages.changepassword.usage" of file "plugins/KhLogin/language.yml"
 				send colored {_x}
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── #
@@ -149,6 +162,26 @@ function khlogin_filemanager(use: text):
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── #
 # functions and sub
+function khlogin_join(p: player):
+	set {_time} to yml value "options.time" of file "plugins/KhLogin/language.yml"
+	file "plugins/KhLogin/players/%{_p}%.yml" doesn't exist:
+		loop "title" and "subtitle":
+			set {_%loop-value%} to yml value "messages.register.title.%loop-value%" of file "plugins/KhLogin/language.yml"
+		send {_p} title colored {_title} with subtitle colored {_subtitle} for 9999 seconds
+		wait "%{_time}%" parsed as timespan
+		file "plugins/KhLogin/players/%{_p}%.yml" doesn't exist:
+			set {_kick} to yml value "messages.login.kicks.time-out" of file "plugins/KhLogin/language.yml"
+			replace all "\n" in {_kick} with newline
+			kick {_p} because colored {_kick}
+	else:
+		loop "title" and "subtitle":
+			set {_%loop-value%} to yml value "messages.login.title.%loop-value%" of file "plugins/KhLogin/language.yml"
+		send {_p} title colored {_title} with subtitle colored {_subtitle} for 9999 seconds
+		wait "%{_time}%" parsed as timespan
+		khlogin_checkLogged({_p}) == false:
+			set {_kick} to yml value "messages.login.kicks.time-out" of file "plugins/KhLogin/language.yml"
+			replace all "\n" in {_kick} with newline
+			kick {_p} because colored {_kick}
 function khlogin_loadStats(p: player, password: text):
 	set {_tries} to yml value "options.tries" of file "plugins/KhLogin/language.yml"
 	set yml value "%uuid of {_p}%.name" of file "plugins/KhLogin/players/%{_p}%.yml" to {_p}'s displayname
