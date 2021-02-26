@@ -1,5 +1,5 @@
-# Skript feito por Kiberzn
-# Discord: kick#4375
+# Skript feito por Kick Holse
+# Discord: https://www.kskripts.tk/discrd
 
 options:
   time: 30 seconds
@@ -13,11 +13,11 @@ messages:
     wrong: '&cA senha que você inseriu esta incorreta, você tem mais {tries} tentativas!'
     usage: '&cUtilize /login <senha>'
     title:
-      title: '&a&lREDE ZN'
+      title: '&a&lREDE KS'
       subtitle: '&7Utilize /login <senha>'
     kicks:
-      time-out: '&c&lREDE ZN\n\n&c                    Você excedeu o tempo limite para se autenticar!'
-      max-tries: '&c&lREDE ZN\n\n&c                    Você excedeu o seu limite de tentativas!'
+      time-out: '&c&lREDE KS\n\n&c                    Você excedeu o tempo limite para se autenticar!'
+      max-tries: '&c&lREDE KS\n\n&c                    Você excedeu o seu limite de tentativas!'
   register:
     different: '&cAs senhas que você inseriu não se coincidem!'
     your-nick: '&cA senha não pode ser seu nick!'
@@ -25,10 +25,10 @@ messages:
     length: '&cA senha deve conter no mínimo {minimum} e no maximo {maximum} caracteres!'
     usage: '&cUtilize /register <senha> <senha>'
     title:
-      title: '&a&lREDE ZN'
+      title: '&a&lREDE KS'
       subtitle: '&7Utilize /register <senha> <senha>'
     kicks:
-      time-out: '&c&lREDE ZN\n\n&c                    Você excedeu o tempo limite para se autenticar!'
+      time-out: '&c&lREDE KS\n\n&c                    Você excedeu o tempo limite para se autenticar!'
   changepassword:
     your-nick: '&cSua nova senha não pode ser seu nick!'
     success: '\n &aSua senha foi alterada com sucesso!\n '
